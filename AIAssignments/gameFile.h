@@ -47,6 +47,9 @@ using namespace std;
 
     int getHayBales();
 
+    vector<cords> getListOfTile(char charToFind);
+    vector<cords> getGrassTileList();
+
     char getCordChar(cords desired);
 
   };
@@ -56,6 +59,7 @@ using namespace std;
 
 #ifndef SCOREINGFUNCTION
 #define SCORINGFUNCTION
+  vector<char> checkTiles(puzzleBoard board, int boardSize, string checkList, vector<cords> cordsToCheck);
   vector<char> checkCard(puzzleBoard board, int boardSize, string checkList, int i, int j);
   vector<char> check3x3(puzzleBoard board, int boardSize, string checkList, int i, int j);
   int getScore(puzzleBoard board, int boardSize);

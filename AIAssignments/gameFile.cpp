@@ -4,57 +4,96 @@ using namespace std;
 
 
 
-int puzzleBoard::countHaybales()
+//This function returns a list of all grass tiles
+vector<cords> puzzleBoard::getGrassTileList()
 {
-  numOfHaybales = 0;
+  //Orignally all the functionality was stored in this function, but I moved it to another function that is more general to allow more functionality later if needed
+  return getListOfTile('.');
+}
+
+//This function returns a list of all cords of the input character 
+vector<cords> puzzleBoard::getListOfTile(char charToFind)
+{
+  //Make a list to store as we go
+  vector<cords> tempList;
+  //For each tile in the board
   for (int i = 0; i < boardSize; i++)
   {
     for (int j = 0; j < boardSize; j++)
     {
-      if (board[i][j] == '@') numOfHaybales++;
+      //Check if it is a desired character
+      if (board[i][j] == charToFind)
+      {
+        //If it is then we make a temp variable and push it back, I could do this in one line but I don't think its needed
+        cords tempCords = { i, j };
+        tempList.push_back(tempCords);
+      }
     }
   }
-  return numOfHaybales;
+  return tempList;
 }
 
+//A simple function that iterates over all the tiles and counts the haybales
+int puzzleBoard::countHaybales()
+{
+  //We can use a neat trick here with the get list of tile function, where if we find the cords of all the haybales we can just count the number of cords
+  return getListOfTile('@').size();
+}
 
+//A constructor function for 0 arguments, generates a board from console
 puzzleBoard::puzzleBoard()
 {
+  //Get the desired board size
   cin >> boardSize;
+  //For each row in the board
   for (int i = 0; i < boardSize; i++)
   {
+    //Get the input string
     string tempInput = "";
     cin >> tempInput;
+    //and set it as the row for the board
     board.push_back(tempInput);
   }
+  //Set the count of the haybales so we don't need to recalculate
   numOfHaybales = countHaybales();
 }
 
+//A constructor for 1 int argument equal to the desired board size
 puzzleBoard::puzzleBoard(int boardSizeInput)
 {
+  //Set the board size from argument
   boardSize = boardSizeInput;
+  //For each row in the board
   for (int i = 0; i < boardSize; i++)
   {
+    //Get the input string
     string tempInput = "";
     cin >> tempInput;
+    //and set it as the row for the board
     board.push_back(tempInput);
   }
+  //Set the count of the haybales so we don't need to recalculate
   numOfHaybales = countHaybales();
 }
 
+//A constructor for a board, we require size for simplicity
 puzzleBoard::puzzleBoard(int boardSizeInput, vector<string> boardInput)
 {
+  //Take inputs and assign to already existing information
   board = boardInput;
   boardSize = boardSizeInput;
+  //Set the count of the haybales so we don't need to recalculate
   numOfHaybales = countHaybales();
 }
 
+//A simple board setter function
 void  puzzleBoard::setBoard(vector<string> boardSet, int boardSizeSet)
 {
   board = boardSet;
   boardSize = boardSizeSet;
 }
 
+//A function to print the board to console
 void  puzzleBoard::printBoard()
 {
   for (int i = 0; i < boardSize; i++)
@@ -63,21 +102,26 @@ void  puzzleBoard::printBoard()
   }
 }
 
+//A getter for the board
 vector<string>  puzzleBoard::getBoard()
 {
   return board;
 }
 
+//A getter for the board size
 int  puzzleBoard::getBoardSize()
 {
   return boardSize;
 }
 
+//A getter for the number of haybales
 int  puzzleBoard::getHayBales()
 {
   return numOfHaybales;
 }
 
+//A function utilized for getting the character at the specified cordinates
+//If the cordinate requested is outside the board we return null, signaling that we are outside the board
 char  puzzleBoard::getCordChar(cords desired)
 {
   //First we check if the value is in the board
@@ -86,85 +130,44 @@ char  puzzleBoard::getCordChar(cords desired)
   return NULL;
 }
 
+//A function that checks certain cordinates for characters in a list that is passed in
+vector<char> checkTiles(puzzleBoard board, int boardSize, string checkList, vector<cords> cordsToCheck)
+{
+  vector<char> listOfChars;
+  for (int k = 0; k < cordsToCheck.size(); k++)
+  {
+
+    char tempChar;
+    tempChar = board.getCordChar(cordsToCheck[k]);
+
+    if (tempChar != NULL && checkList.find(tempChar) != string::npos)
+    {
+      listOfChars.push_back(tempChar);
+    }
+  }
+  return listOfChars;
+}
+
+
+//A function that acts as an overhead for the check tiles function to specify we are looking at cardinal directions only
 vector<char> checkCard(puzzleBoard board, int boardSize, string checkList, int i, int j)
 {
-  vector<char> importantCharactersCard;
-  string importantCharactersCardinalList = checkList;
-  //I use this, frankly disgusting, for loop so that if new characters are needed to be checked it is a single line to add them
-  for (int k = 0; k < 4; k++)
-  {
-    char tempChar;
-    //Switch case to actually grab the correct cordinate
-    switch (k)
-    {
-      //Inside each we check if the cord is valid by 
-    case 0:
-      tempChar = board.getCordChar(cords(i - 1, j));
-      break;
-    case 1:
-      tempChar = board.getCordChar(cords(i + 1, j));
-      break;
-    case 2:
-      tempChar = board.getCordChar(cords(i, j - 1));
-      break;
-    case 3:
-      tempChar = board.getCordChar(cords(i, j + 1));
-      break;
-
-    }
-    if (tempChar != NULL && importantCharactersCardinalList.find(tempChar) != string::npos)
-    {
-      importantCharactersCard.push_back(tempChar);
-    }
-  }
-  return importantCharactersCard;
+  //A list of cordinates that we are looking for
+  vector<cords> toCheck{ {i - 1, j}, {i + 1, j}, {i, j - 1}, {i, j + 1 } };
+  
+  return checkTiles(board, boardSize, checkList, toCheck);
 }
 
+//A function that acts as an overhead for the check tiles functio to specify we are looking in a 3x3 around the tile
 vector<char> check3x3(puzzleBoard board, int boardSize, string checkList, int i, int j)
 {
-  vector<char> importantCharactersBoth;
-  string importantCharactersBothList = checkList;
-  for (int k = 0; k < 8; k++)
-  {
-    char tempChar;
-    //Switch case to actually grab the correct cordinate
-    switch (k)
-    {
-      //Inside each we check if the cord is valid by 
-    case 0:
-      tempChar = board.getCordChar(cords(i - 1, j));
-      break;
-    case 1:
-      tempChar = board.getCordChar(cords(i - 1, j + 1));
-      break;
-    case 2:
-      tempChar = board.getCordChar(cords(i, j + 1));
-      break;
-    case 3:
-      tempChar = board.getCordChar(cords(i + 1, j + 1));
-      break;
-    case 4:
-      tempChar = board.getCordChar(cords(i + 1, j));
-      break;
-    case 5:
-      tempChar = board.getCordChar(cords(i + 1, j - 1));
-      break;
-    case 6:
-      tempChar = board.getCordChar(cords(i, j - 1));
-      break;
-    case 7:
-      tempChar = board.getCordChar(cords(i - 1, j - 1));
-      break;
-
-    }
-    if (tempChar != NULL && importantCharactersBothList.find(tempChar) != string::npos)
-    {
-      importantCharactersBoth.push_back(tempChar);
-    }
-  }
-  return importantCharactersBoth;
+  //A list cordinates 3x3 around the tile we care about
+  vector<cords> toCheck{ {i - 1, j}, {i + 1, j}, {i, j - 1}, {i, j + 1 }, {i - 1, j - 1},  {i - 1, j + 1},  {i + 1, j - 1},  {i + 1, j + 1} };
+  
+  return checkTiles(board, boardSize, checkList, toCheck);
 }
 
+//The actual scoring function
 int getScore(puzzleBoard board, int boardSize)
 {
 
