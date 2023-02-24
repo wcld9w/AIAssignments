@@ -135,6 +135,9 @@
     <ClInclude Include="agents.h" />
     <ClInclude Include="gameFile.h" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="run.sh" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

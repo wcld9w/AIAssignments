@@ -34,3 +34,28 @@ vector<string> randomPlacement(puzzleBoard inputBoard)
 
   return workingBoard;
 }
+
+
+vector<string> BFSPlacement(puzzleBoard inputBoard)
+{
+  int numOfCows = inputBoard.getHayBales();
+
+  vector<string> workingBoard = inputBoard.getBoard();
+  vector<cords> grassTileList;
+
+  //Get a lit of all the open grass tiless
+  for (int i = 0; i < inputBoard.getBoardSize(); i++)
+  {
+    for (int j = 0; j < inputBoard.getBoardSize(); j++)
+    {
+      if (workingBoard[i][j] == '.')
+      {
+        cords tempCords = { i, j };
+        grassTileList.push_back(tempCords);
+      }
+    }
+  }
+
+
+
+}

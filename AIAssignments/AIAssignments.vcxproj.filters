@@ -33,4 +33,9 @@
       <Filter>Resource Files\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="run.sh">
+      <Filter>Source Files</Filter>
+    </None>
+  </ItemGroup>
 </Project>
