@@ -21,7 +21,7 @@ using namespace std;
   #include <iostream>
   #include <vector>
   #include <string>
-  #include<cstdlib>
+  #include <cstdlib>
   
   class puzzleBoard {
   private:
@@ -59,6 +59,7 @@ using namespace std;
 
 #ifndef SCOREINGFUNCTION
 #define SCORINGFUNCTION
+  int customCount(vector<char> fromCount, char toCount);
   vector<char> checkTiles(puzzleBoard board, int boardSize, string checkList, vector<cords> cordsToCheck);
   vector<char> checkCard(puzzleBoard board, int boardSize, string checkList, int i, int j);
   vector<char> check3x3(puzzleBoard board, int boardSize, string checkList, int i, int j);

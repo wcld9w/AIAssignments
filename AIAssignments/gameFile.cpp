@@ -167,6 +167,20 @@ vector<char> check3x3(puzzleBoard board, int boardSize, string checkList, int i,
   return checkTiles(board, boardSize, checkList, toCheck);
 }
 
+
+
+//For some reason the linux machines on campus were giving errors about the c++ count() so I had to make a custom one for scoring purposes. 
+int customCount(vector<char> fromCount, char toCount)
+{
+  int count = 0;
+  for (int i = 0; i < fromCount.size(); i++)
+  {
+    if (fromCount[i] == toCount) count++;
+  }
+  return count;
+}
+
+
 //The actual scoring function
 int getScore(puzzleBoard board, int boardSize)
 {
@@ -195,9 +209,9 @@ int getScore(puzzleBoard board, int boardSize)
         bool foundHay = false;
         bool foundPond = false;
         //We count the occurances and treat it as a bool, doing the equivalent of  >= 0, which works for what we currently need
-        if (count(importantCharactersBoth.begin(), importantCharactersBoth.end(), 'C')) foundCow = true;
-        if (count(importantCharactersCard.begin(), importantCharactersCard.end(), '@')) foundHay = true;
-        if (count(importantCharactersCard.begin(), importantCharactersCard.end(), '#')) foundPond = true;
+        if (customCount(importantCharactersBoth, 'C')) foundCow = true;
+        if (customCount(importantCharactersCard,  '@')) foundHay = true;
+        if (customCount(importantCharactersCard, '#')) foundPond = true;
 
         //Associating the found with the scores, we seperate and put the actual scoring here as it makes it easy to not count multiple sets of hay
         int tempCowScore = 0;

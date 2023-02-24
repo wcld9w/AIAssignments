@@ -8,4 +8,5 @@ using namespace std;
   #include<cstdlib>
   #include "gameFile.h"
   vector<string> randomPlacement(puzzleBoard inputBoard);
+  vector<string> BFSPlacement(puzzleBoard inputBoard);
 #endif
