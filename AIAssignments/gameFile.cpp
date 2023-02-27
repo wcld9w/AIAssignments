@@ -228,3 +228,9 @@ int getScore(puzzleBoard board, int boardSize)
   }
   return totalScore;
 }
+
+int getScore(vector<string> board, int boardSize)
+{
+  puzzleBoard temp(boardSize, board);
+  return getScore(temp, boardSize);
+}

@@ -64,5 +64,6 @@ using namespace std;
   vector<char> checkCard(puzzleBoard board, int boardSize, string checkList, int i, int j);
   vector<char> check3x3(puzzleBoard board, int boardSize, string checkList, int i, int j);
   int getScore(puzzleBoard board, int boardSize);
+  int getScore(vector<string> board, int boardSize);
 #endif // !SCOREINGFUNCTION
 
