@@ -49,87 +49,66 @@ vector<string> BFSPlaceCords(vector<cords> grassTileList, vector<int> cowPos, ve
   return temp;
 }
 
-//Breadth first search algorithm, assumes you must place each cow to achieve goal score so it shortcuts to having each cow on the board, finds highest possible score
-vector<string> BFSPlacement(puzzleBoard inputBoard)
-{
-  int numOfCows = inputBoard.getHayBales();
-
-  vector<string> workingBoard = inputBoard.getBoard();
-  vector<cords> grassTileList = inputBoard.getGrassTileList();;
-  vector<int> cowPos(inputBoard.getHayBales(), 0);
-  //make list of cows with current positions
-  for (int i = 0; i < cowPos.size(); i++)
-  {
-    //What this does is push each cow to the grass tile associated with its position (cow [0] to grass tile [0], cow [1] to grass tile [1])
-    cowPos[i] = i;
-  }
-  //Now we start the actual loop
-
-  vector<string> tempBoard;
-  vector<string> currentTopBoard;
-  bool canContinue = true;
-  int currentMaxScore = INT_MIN;
-  while (canContinue)
-  {
-    //check board score and update top score
-    tempBoard = BFSPlaceCords(grassTileList, cowPos, workingBoard);
-    if (currentMaxScore < getScore(tempBoard, inputBoard.getBoardSize()))
-    {
-      currentMaxScore = getScore(tempBoard, inputBoard.getBoardSize());
-      currentTopBoard = tempBoard;
-    }
-    //Move cow n by 1 increment starting from last cow
-    //When cow n reaches final slot increase n-1 by 1
-      //Push following cows
-
-    //Get the last cow in the list
-    //If its not in final position
-    if (cowPos[cowPos.size() - 1] != grassTileList.size() - 1)
-    {
-      //Move it forward one
-      cowPos[cowPos.size() - 1] = cowPos[cowPos.size() - 1] + 1;
-    }
-    //Else
-    else
-    {
-      int lastCowToPush = cowPos.size() - 1;
-      //Check back recursivly for following final position cows
-      while(lastCowToPush >= 0)
-      {
-        //This needs checked
-        if (cowPos[lastCowToPush] != grassTileList.size()-1 - (cowPos.size() - 1 - lastCowToPush))
-        {
-          break;
-        }
-        lastCowToPush--;
-      }
-      //If all cows are at end, we exit
-      if (lastCowToPush == -1) break;
-      //Else find final cow at last position
-        //Take cow previous and push forward one
-      cowPos[lastCowToPush] += 1;
-      //Push all cows for follow it
-      for (int i = lastCowToPush+1; i < cowPos.size(); i++)
-      {
-        cowPos[i] = cowPos[i - 1] + 1;
-      }
-
-    }
-
-  }
-  return currentTopBoard;
-}
-
-vector<string> BFSPlacementTrue(puzzleBoard inputBoard)
-{
-
-}
-vector<string> BFSPlacementTargetScore(puzzleBoard inputBoard, int score)
-{
-
-}
 vector<string> BFSPlacementTrueTargetScore(puzzleBoard inputBoard, int score)
 {
+  //Variable declarations
+   //Get the number of cows we have to place
+  int maxNumOfCows = inputBoard.getHayBales();
+  //Input a board that we can edit without messing with the input board
+  vector<string> workingBoard = inputBoard.getBoard();
+  //A variable to hold all the tiles we consider open
+  vector<cords> grassTileList;
+  //Variables to assist in breadth first search
+  vector<int> cowsList(inputBoard.getHayBales(), 0);;
+  int currentCowNum = 1;
+  //Get a list of all the open grass tiless
+  grassTileList = inputBoard.getGrassTileList();
+
+
+  while (true)
+  {
+    //Check scores of current cow placement
+    if (currentScore >= 7)
+    {
+      ////////////////////
+      //We can just return here
+      ////////////////////
+    }
+    //Move cows
+      //If can move cow move cow
+    //This gets the first cow in our list that can be moved
+    int canMove = -1;
+    for (int i = 0; i < currentCowNum; i++)
+    {
+      if (cowsList[0] != grassTileList.size() - (1 + i)) canMove = true;
+    }
+    //if its -1, we need to increase cow count
+    if(canMove == -1)
+    {
+      currentCowNum += 1;
+      for (int i = 0; i < currentCowNum; i++)
+      {
+        cowsList[i] = currentCowNum - 1;
+      }
+    //Else we just need to move the cow forward, and cows previous to infront of it
+    }
+    else
+    {
+      cowsList[canMove] += 1;
+      for (int i = canMove - 1; i >= 0; i--)
+      {
+        cowsList[i] = cowsList[i+1] + 1;
+      }
+    }
+      
+  /*
+  
+
+    */
+  }
+
+
+  return workingBoard;
 
 }
 
