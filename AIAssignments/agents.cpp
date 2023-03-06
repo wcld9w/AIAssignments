@@ -63,7 +63,7 @@ vector<string> BFSPlacementTrueTargetScore(puzzleBoard inputBoard, int score)
   vector<int> cowsList(inputBoard.getHayBales(), 0);;
   int currentCowNum = 1;
   //Variable to store the size of the board to reduce calls
-  int boardSize = inputBoard.getBoardSize()
+  int boardSize = inputBoard.getBoardSize();
   //Get a list of all the open grass tiless
   grassTileList = inputBoard.getGrassTileList();
 
@@ -72,7 +72,7 @@ vector<string> BFSPlacementTrueTargetScore(puzzleBoard inputBoard, int score)
   {
     //Check scores of current cow placement
       //First we generate a temporary list to store which cows we care about
-    vector<cords> tempList;
+    vector<int> tempList;
     for (int i = 0; i < currentCowNum; i++)
     {
       tempList.push_back(cowsList[i]);
