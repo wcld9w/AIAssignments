@@ -49,7 +49,17 @@ vector<string> PlaceCords(vector<cords> grassTileList, vector<int> cowPos, vecto
   return temp;
 }
 
-//This is 
+
+vector<string> BFSPlaceCords(vector<cords> grassTileList, vector<int> cowPos, vector<string> workingBoard)
+{
+  for (int i = 0; i < cowPos.size(); i++)
+  {
+    workingBoard[grassTileList[cowPos[i]].x][grassTileList[cowPos[i]].y] = 'C';
+  }
+  return workingBoard;
+}
+
+
 vector<string> BFSPlacementTrueTargetScore(puzzleBoard inputBoard, int score)
 {
   //Variable declarations
@@ -67,19 +77,17 @@ vector<string> BFSPlacementTrueTargetScore(puzzleBoard inputBoard, int score)
   //Get a list of all the open grass tiless
   grassTileList = inputBoard.getGrassTileList();
 
-
   while (true)
   {
-    //Check scores of current cow placement
-      //First we generate a temporary list to store which cows we care about
+    //First we score the current board, the initialized values work for this and is a neat cheat code for how it was initialized
     vector<int> tempList;
     for (int i = 0; i < currentCowNum; i++)
     {
       tempList.push_back(cowsList[i]);
     }
-      //Then we check the scores without editing the working board
+    //Then we check the scores without editing the working board
     int tempScore = getScore(BFSPlaceCords(grassTileList, tempList, workingBoard), boardSize);
-      //If the score is equal to or exceeds our desired amount 
+    //If the score is equal to or exceeds our desired amount 
     if (tempScore >= score)
     {
       //We actually place the cows and return the board
@@ -89,48 +97,45 @@ vector<string> BFSPlacementTrueTargetScore(puzzleBoard inputBoard, int score)
       }
       return workingBoard;
     }
-    //This gets the first cow in our list that can be moved
+
+    //Get if we can move a cow, the cows at the start of the list are the cows at the back of the line. we prioritize moving the cows at the back
     int canMove = -1;
     for (int i = 0; i < currentCowNum; i++)
     {
-      if (cowsList[0] != grassTileList.size() - (1 + i)) canMove = true;
+      if (cowsList[i] != grassTileList.size() - (1 + i) && canMove == -1)
+      {
+        canMove = i;
+      }
     }
-    //if its -1, we need to increase cow count, as we can not move any cows
-    if(canMove == -1)
+    //If we can move a cow then we should move it and push following cows to the end
+    if (canMove != -1)
     {
-      //This increases the cows
-      currentCowNum += 1;
-      //This is error handling if the number of cows exceeds maximum, prevents the code from going infinite as well if the input is not possible
-      if (currentCowNum > maxNumOfCows)
+      cowsList[canMove] += 1;
+      for (int i = canMove - 1; i >= 0; i--) //Move all preceding cows to follow the just moved cow, this is done because all preceding cows can not move, according to BFS we reset to continue
       {
-        cout << "Error, the given board can not have the needed score";
-        return workingBoard;
-      }
-      //And this resets the cows to the correct location
-      for (int i = 0; i < currentCowNum; i++)
-      {
-        cowsList[i] = currentCowNum - 1;
+        cowsList[i] = cowsList[i + 1] + 1;
       }
     }
-    //Else we just need to move the cow found forward, and cows previous to infront of it
     else
     {
-      //For the cow that we can move, we move it forward one tile
-      cowsList[canMove] += 1;
-      //And for all following cows the move them to follow the previous cow
-      for (int i = canMove - 1; i >= 0; i--)
+      //We need to add a new cow
+      currentCowNum += 1;
+      //Check if we have hit max number of cows
+      if (currentCowNum > maxNumOfCows)
       {
-        cowsList[i] = cowsList[i+1] + 1;
+        cout << "ERROR desired score not possible returning original board without cows";
+        return workingBoard;
+      }
+      //If we can add a new cow, initalize the cow position array correctly
+      for (int i = 0; i < currentCowNum; i++)
+      {
+        cowsList[i] = currentCowNum - (i + 1);
       }
     }
   }
-
-
+  //This return isn't ever reached, but included beacuse C++ throws a fit if no return statement at the end of the function
   return workingBoard;
-
 }
-
-
 
 
 

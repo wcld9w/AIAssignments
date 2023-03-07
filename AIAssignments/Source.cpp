@@ -16,7 +16,7 @@ void runner()
   puzzleBoard temp(boardSize);
 
   //We are currently only doing random placement so runt he random placement and set it to the current board
-  temp.setBoard(randomPlacement(temp), temp.getBoardSize());
+  temp.setBoard(BFSPlacementTrueTargetScore(temp, 7), temp.getBoardSize());
   //Now we output what is needed for the grading
   cout << boardSize << endl;
   temp.printBoard();
