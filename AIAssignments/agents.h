@@ -11,4 +11,7 @@ using namespace std;
   vector<string> PlaceCords(vector<cords> grassTileList, vector<int> cowPos, vector<string> workingBoard); 
   vector<string> BFSPlacementTrueTargetScore(puzzleBoard inputBoard, int score = 7);
   vector<string> iterativeDeepDepthFirstSearch(puzzleBoard inputBoard, int targetScore = 7);
+  vector<string> bestFirstSearch(puzzleBoard inputBoard, int targetScore = 12);
+  //Helper functions for best first search
+  vector<string> reduceScore(vector<string> board, int x, int y);
 #endif

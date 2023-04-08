@@ -245,3 +245,74 @@ vector<string> iterativeDeepDepthFirstSearch(puzzleBoard inputBoard, int targetS
   //This return isn't ever reached, but included beacuse C++ throws a fit if no return statement at the end of the function I think, IDK i never checked because its easy to add one line instead of testing
   return workingBoard;
 }
+
+
+int getScoreOfLocation(vector<string> board, int x, int y)
+{ 
+  if (board[x][y] != '.') return INT_MIN+50; //We add 50 beacuse otherwise we could get an int underflow error if we try to reduce the location
+  vector<char> cards = checkCard(puzzleBoard(board), board.size(), '@#', x, y);
+  bool foundHay = false;
+  bool foundPond = false;
+  if (customCount(cards, '@')) foundHay = true;
+  if (customCount(cards,  '#')) foundPond = true;
+  return foundHay ? (foundPond ? 3 : 1) : 0;
+}
+
+void reduceScore(vector<vector<int>>& board, int x, int y)
+{
+  vector<cords> toReduce = { {-1,-1}, {1,-1}, {-1,1}, {1,1}, {-1,0},{0,-1},{0,1},{1,0} };
+  for (int i = 0; i < 8; i++)
+  {
+    if (x + toReduce[i][0] >= 0 && x + toReduce[i][0] < board.size() && y + toReduce[i][1] > -1 && y + toReduce[i][1] < board.size())
+    {
+      board[x + toReduce[i][0]][y + toReduce[i][1]] = board[x + toReduce[i][0]][y + toReduce[i][1]] - 3;
+    }
+  }
+}
+
+vector<vector<int>> generateIntBoard(vector<string> getBoard)
+{
+  vector<vector<int>> tempBoard;
+  for (int i = 0; i < getBoard.size(); i++)
+  {
+    vector<int> curLine;
+    for (int j = 0; j < getBoard.size(); j++)
+    {
+      curLine.append(getScoreOfLocation(getBoard, x, y));
+    }
+    tempBoard.append(curLine);
+  }
+  return tempBoard;
+}
+
+cords getBestScore(vector<vector<int>> valueBoard)
+{
+  cords tempCords(0,0);
+  for (int i = 0; i < valueBoard.size(); i++)
+  {
+    for (int j = 0; j < valueBoard.size(); j++)
+    {
+      if (valueBoard[tempCords.x][tempCords.y] < valueBoard[i][j])
+      {
+        tempCords.x = i;
+        tempCords.y = j;
+      }
+    }
+  }
+
+}
+
+vector<string> bestFirstSearch(puzzleBoard inputBoard, int targetScore)
+{
+  vector<string> tempBoard = inputBoard.getBoard();
+  //First give each position score
+  vector<vector<int>> intBoard = generateIntBoard(inputboard);
+  for (int i = 0; i < inputBoard.getHayBales(); i++)
+  {
+    cords bestLoc = getBestScore(intBoard);
+    reduceScore(intBoard, bestLoc.x, bestLoc.y);
+    intBoard[bestLoc.x][bestLoc.y] = -1000;
+    tempBoard[bestLoc.x][bestLoc.y] = 'C'
+  }
+  inputBoard.setBoard(tempBoard);
+}
