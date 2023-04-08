@@ -232,7 +232,7 @@ int getScore(puzzleBoard board, int boardSize)
 int getScore(vector<string> board, int boardSize)
 {
   puzzleBoard temp(boardSize, board);
-  //temp.printBoard();
-  //cout << " ---------------- " << endl;
+  temp.printBoard();
+  cout << " ---------------- " << endl;
   return getScore(temp, boardSize);
 }
