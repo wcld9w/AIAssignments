@@ -13,5 +13,7 @@ using namespace std;
   vector<string> iterativeDeepDepthFirstSearch(puzzleBoard inputBoard, int targetScore = 7);
   vector<string> bestFirstSearch(puzzleBoard inputBoard, int targetScore = 12);
   //Helper functions for best first search
-  vector<string> reduceScore(vector<string> board, int x, int y);
+  cords getBestScore(vector<vector<int>> valueBoard);
+  vector<vector<int>> generateIntBoard(vector<string> getBoard);
+  int getScoreOfLocation(vector<string> board, int x, int y);
 #endif
